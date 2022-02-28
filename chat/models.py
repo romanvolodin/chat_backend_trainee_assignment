@@ -1,8 +1,20 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
+
+from chat.managers import UserManager
 
 
-User = get_user_model()
+class User(AbstractBaseUser):
+    username = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.username
 
 
 class Chat(models.Model):
