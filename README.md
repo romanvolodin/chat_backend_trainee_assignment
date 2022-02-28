@@ -33,13 +33,13 @@ pip install -r requirements.txt
 Создайте таблицы в базе данных:
 
 ```sh
-manage.py migrate
+./manage.py migrate
 ```
 
 Запустите сервер чата:
 
 ```sh
-manage.py runserver 9000
+./manage.py runserver 9000
 ```
 
 Сервер будет доступен по адресу <http://localhost:9000/>
