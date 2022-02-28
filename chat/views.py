@@ -56,3 +56,30 @@ def create_chat(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response({"created_chat_id": serializer.data["id"]}, status=201)
+
+
+@api_view(["POST"])
+def list_messages(request):
+    try:
+        chat = Chat.objects.get(id=request.data["chat"])
+    except Chat.DoesNotExist:
+        return Response(
+            {"error": f"Chat with id {request.data['chat']} not found."}, status=404
+        )
+    messages = chat.messages.all().order_by("created_at")
+    serializer = MessageSerializer(messages, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def add_message(request):
+    chat = Chat.objects.get(id=request.data["chat"])
+    user = User.objects.get(id=request.data["author"])
+    if user not in chat.users.all():
+        return Response(
+            {"error": "User is not allowed to write to the chat."}, status=400
+        )
+    serializer = MessageSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response({"created_message_id": serializer.data["id"]}, status=201)
