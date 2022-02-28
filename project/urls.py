@@ -17,4 +17,6 @@ urlpatterns = [
     path("auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("users/get", views.list_users),
     path("users/add", views.create_user),
+    path("chats/get", views.list_chats),
+    path("chats/add", views.create_chat),
 ]

@@ -34,3 +34,25 @@ def create_user(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data, status=201)
+
+
+@api_view(["POST"])
+def list_chats(request):
+    try:
+        user = User.objects.get(id=request.data["user"])
+    except User.DoesNotExist:
+        return Response(
+            {"error": f"User with id {request.data['user']} not found."}, status=404
+        )
+
+    chats = user.chats.all()
+    serializer = ChatSerializer(chats, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def create_chat(request):
+    serializer = ChatSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response({"created_chat_id": serializer.data["id"]}, status=201)
