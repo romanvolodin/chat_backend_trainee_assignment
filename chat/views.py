@@ -10,7 +10,7 @@ def create_user(request):
     serializer = UserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data, status=201)
+    return Response({"created_user_id": serializer.data["id"]}, status=201)
 
 
 @api_view(["POST"])
